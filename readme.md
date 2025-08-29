@@ -1,134 +1,193 @@
-# 🤖 NLP Projects: Language Translator & FAQ Chatbot
+<details>
+<summary><strong>Table of Contents (click to expand)</strong></summary>
 
-Welcome to this repository containing two NLP-based web applications built with Python and Streamlit:
+1. Translator App (Streamlit)
+2. FAQ Chatbot (spaCy + TF‑IDF)
+3. Extra Tasks (AI Portfolio, K8s Manifests)
+4. Docker Images
 
-1. 🌐 **Language Translator App** – Real-time multilingual translation using Google Translate.
-2. 📚 **FAQ Chatbot App** – AI-powered assistant for answering frequently asked questions.
+</details>
 
-> Designed for educational, internship, and rapid prototyping use.
+---
+
+## 📂 Repository Overview
+
+```plaintext
+codealpha/
+├── translator_app/        # 🌐 Language Translator (Streamlit)
+├── faq_chatbot/           # 📚 FAQ Chatbot (spaCy + TF-IDF)
+├── ai-portfolio/          # ⚡ Next.js + Tailwind developer portfolio (extra task)
+├── k8s/                   # ☸️ Kubernetes manifests (extra infra task)
+└── readme.md              # Main consolidated documentation
+```
 
 ---
 
 ## 🚀 Project Showcase
 
-| App             | Description                                             | Technologies Used                             |
-|----------------|---------------------------------------------------------|-----------------------------------------------|
-| 🌐 Translator   | Translate text across 100+ languages instantly          | `streamlit`, `googletrans`, `langcodes`       |
-| 📚 Chatbot      | Chat with an AI that answers common product questions  | `streamlit`, `spaCy`, `scikit-learn`, `TF-IDF`|
+| App / Task        | Description                                                 | Key Tech                                      |
+|-------------------|-------------------------------------------------------------|-----------------------------------------------|
+| 🌐 Translator      | Translate text across 100+ languages instantly              | `streamlit`, `googletrans`, `langcodes`       |
+| 📚 FAQ Chatbot     | Answer FAQs via semantic similarity                         | `streamlit`, `spaCy`, `scikit-learn`, `TF-IDF`|
+| ⚡ AI Portfolio     | Developer portfolio (dark/light theme, projects, contact)  | `Next.js`, `TailwindCSS`                      |
+| ☸️ K8s Manifests    | Deployment + Service + Ingress + MongoDB                   | `Kubernetes`, `MongoDB`                       |
 
 ---
-<details>
-<summary><strong>Tasks</strong> (click to expand)</summary>
 
 <details>
-<summary><strong>🌐 Language Translator App</strong> (click to expand)</summary>
+<summary><strong>🌐 Language Translator App (click to expand)</strong></summary>
 
 ### ✨ Features
 
-- Auto-detect input language
-- Translate into 100+ languages
-- Clean, responsive Streamlit UI
-- Lightweight and fast
+* Auto-detect input language
+* Translate into 100+ languages
+* Clean, responsive Streamlit UI
+* Lightweight and fast
 
-### 🧠 How it Works
+### 🧠 How It Works
 
-- Uses `googletrans` to call the unofficial Google Translate service
-- Leverages `LANGUAGES` dictionary to convert user-friendly names into language codes
-- UI built with `streamlit`
+* Uses `googletrans` (unofficial Google Translate API)
+* Maps human-readable names to ISO codes via `LANGUAGES`
+* Stateless request/response pattern
 
-### 🖼️ UI Preview
-
-![Translator App]![alt text](image.png)
-
-### 📦 Installation
-
+### 📦 Local Installation
 ```bash
 pip install streamlit googletrans==4.0.0-rc1
 ```
+Run:
+```bash
+streamlit run translator_app/app.py
+```
+
+### 🐳 Docker
+```bash
+docker pull devs12/translator:latest
+docker run -p 8501:8501 devs12/translator:latest
+```
+Open: http://localhost:8501
+
+### 🖼️ (Optional) UI Preview
+`image.png` (translator screenshot placeholder)
+
 </details>
 
 <details>
-<summary><strong>📚 FAQ Chatbot with NLP</strong> (click to expand)</summary>
+<summary><strong>📚 FAQ Chatbot (click to expand)</strong></summary>
 
-# 🤖 FAQ Chatbot with NLP (spaCy + Streamlit)
+### � Features
+* FAQ intent matching via TF-IDF + cosine similarity
+* spaCy lemmatization for normalization
+* Threshold-based confidence (adjustable)
+* Simple JSON-driven knowledge base
+* Streamlit interactive interface
 
-An intelligent chatbot that answers frequently asked questions (FAQs) using NLP techniques such as lemmatization (via spaCy), TF-IDF vectorization, and cosine similarity. Built with Python and Streamlit, this app simulates a simple customer support assistant for any product or service.
-
----
-
-## 📈 Features
-
-- ✅ Answers user questions based on predefined FAQs
-- 🧠 Uses spaCy for lemmatization and text preprocessing
-- 📀 Ranks user queries using TF-IDF + cosine similarity
-- 🛠️ Easy to extend with new FAQs (edit a single JSON file)
-- 💥 Clean, interactive interface built with Streamlit
-
----
-
-## 📁 Project Structure
-
+### 📁 Structure
 ```plaintext
 faq_chatbot/
-├── app.py                  # Streamlit app entry point
-├── chatbot/                # Core chatbot logic
-│   ├── __init__.py         # Package initializer (optional)
-│   ├── core.py             # Matching logic using TF-IDF and cosine similarity
-│   └── utils.py            # Text preprocessing using spaCy
+├── app.py
+├── chatbot/
+│   ├── core.py
+│   └── utils.py
 ├── data/
-│   └── faqs.json           # Editable list of FAQs in JSON format
-├── requirements.txt        # Required Python packages
-└── README.md               # Project documentation
+│   └── faqs.json
+├── requirements.txt
+└── Dockerfile (if added for container build)
 ```
 
----
+### 🔍 Pipeline
+1. Normalize user input (lowercase, lemmatize)
+2. Vectorize FAQs + query with TF-IDF
+3. Compute cosine similarity
+4. Return best answer if score >= threshold (default 0.3)
+5. Otherwise fallback: ask user to rephrase
 
-## 🧠 How It Works
-
-1. User types a question into the chatbot interface.
-2. Input is lemmatized using **spaCy**.
-3. Each FAQ question is also preprocessed the same way.
-4. All are converted to **TF-IDF vectors**.
-5. **Cosine similarity** is computed to find the closest match.
-6. If the similarity score is above threshold (e.g. `0.3`), the corresponding answer is shown.
-
----
-
-## 🛎️ Installation
-
-1. **Clone the repository**:
-
+### 🛎️ Install & Run Locally
 ```bash
-git clone https://github.com/your-username/faq_chatbot.git
-cd faq_chatbot
-```
-
-2. **Install dependencies**:
-
-```bash
-pip install -r requirements.txt
+pip install -r faq_chatbot/requirements.txt
 python -m spacy download en_core_web_sm
+streamlit run faq_chatbot/app.py
 ```
 
-3. **Run the chatbot**:
-
+### 🐳 Docker
 ```bash
-streamlit run app.py
+docker pull devs12/faq-chatbot:latest
+docker run -p 8501:8501 devs12/faq-chatbot:latest
 ```
 
----
-
-## 📝 Customizing FAQs
-
-Edit the `data/faqs.json` file to add or update questions and answers:
-
+### 📝 Update FAQs
+Edit `faq_chatbot/data/faqs.json`:
 ```json
 {
   "What is your return policy?": "You can return items within 30 days.",
   "How can I track my order?": "Track your order with the link emailed after purchase."
 }
 ```
-## Ui Interface
-![UI](image-1.png)
+
+### UI
+![FAQ UI](image-1.png)
+
+### 🚀 Future Ideas
+* Sentence embeddings (e.g. MiniLM / BERT)
+* Multilingual spaCy model
+* Feedback logging for unanswered queries
+* Caching vectorizer model
 
 </details>
+
+<details>
+<summary><strong>⚡ AI Portfolio (extra task) – click to expand</strong></summary>
+
+Next.js + Tailwind project showcasing developer profile, projects, contact form, theming, and reusable components (`Header`, `ProjectCard`, `ThemeToggle`).
+
+Run locally:
+```bash
+cd ai-portfolio
+npm install
+npm run dev
+```
+Open: http://localhost:3000
+
+</details>
+
+<details>
+<summary><strong>☸️ Kubernetes Manifests (extra infra) – click to expand</strong></summary>
+
+Located in `k8s/`:
+* Deployments: frontend, backend, MongoDB
+* Services: ClusterIP services for internal routing
+* PersistentVolume / PersistentVolumeClaim for MongoDB storage
+* Ingress for external routing
+* Secrets & Namespace segregation
+
+Apply (example):
+```bash
+kubectl apply -f k8s/namespace.yml
+kubectl apply -f k8s/.
+```
+
+</details>
+
+---
+
+## � Docker Repository
+Central images published to: https://hub.docker.com/repositories/devs12
+
+| Image | Purpose | Default Port |
+|-------|---------|--------------|
+| devs12/translator | Streamlit language translator | 8501 |
+| devs12/faq-chatbot | Streamlit FAQ chatbot | 8501 |
+
+Generic run pattern:
+```bash
+docker pull <image>
+docker run -p 8501:8501 <image>
+```
+
+---
+
+## 📄 License
+MIT (see LICENSE if provided).
+
+## 👤 Author
+Dev Shah – internship & learning focused build.
+
